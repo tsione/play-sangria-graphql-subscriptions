@@ -8,9 +8,9 @@ import modules.AppDatabase
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
-  * Implementation of repository for 'Post' entity.
+  * An implementation of PostRepository for the Post entity.
   *
-  * @param database         instance of database
+  * @param database         the database instance
   * @param executionContext execute program logic asynchronously, typically but not necessarily on a thread pool
   */
 @Singleton
@@ -18,12 +18,12 @@ class PostRepositoryImpl @Inject()(val database: AppDatabase)
                                   (implicit val executionContext: ExecutionContext) extends PostRepository {
 
   /**
-    * Specific database
+    * A specific database.
     */
   val db = database.db
 
   /**
-    * Specific database profile
+    * A specific database profile.
     */
   val profile = database.profile
 
@@ -32,56 +32,56 @@ class PostRepositoryImpl @Inject()(val database: AppDatabase)
   def postQuery = TableQuery[Post.Table]
 
   /**
-    * Creates instance.
+    * Creates a Post instance.
     *
-    * @param post a new instance
-    * @return created instance
+    * @param post a new Post instance
+    * @return the created Post instance
     */
   override def create(post: Post): Future[Post] = db.run {
     Actions.create(post)
   }
 
   /**
-    * Returns instance by id.
+    * Returns an instance found by ID.
     *
-    * @param id an id of the instance
-    * @return found instance
+    * @param id the Post instance ID
+    * @return the found Post instance
     */
   override def find(id: Long): Future[Option[Post]] = db.run {
     Actions.find(id)
   }
 
   /**
-    * Returns a list of instances.
+    * Returns a list of Post instances.
     *
-    * @return list of instance
+    * @return the list of Post instances
     */
   override def findAll(): Future[List[Post]] = db.run {
     Actions.findAll()
   }
 
   /**
-    * Updates existing instance.
+    * Updates an existing Post instance.
     *
-    * @param post new instance
-    * @return updated instance
+    * @param post the new Post instance
+    * @return the updated Post instance
     */
   override def update(post: Post): Future[Post] = db.run {
     Actions.update(post)
   }
 
   /**
-    * Delete existing instance by id.
+    * Deletes an existing Post instance found by ID.
     *
-    * @param id an id of some instance
-    * @return true/false result of deleting
+    * @param id the Post instance ID
+    * @return the boolean result
     */
   override def delete(id: Long): Future[Option[Post]] = db.run {
     Actions.delete(id)
   }
 
   /**
-    * Provides implementation for CRUD operations with 'Post' entity.
+    * Provides an implementation for CRUD operations with the Post entity.
     */
   object Actions {
 
@@ -89,13 +89,13 @@ class PostRepositoryImpl @Inject()(val database: AppDatabase)
       for {
         maybePost <- post.id.fold[DBIO[Option[Post]]](DBIO.successful(None))(find)
         maybePostId <- maybePost match {
-          case Some(_) => DBIO.failed(AlreadyExists(s"Already exists a post with id = ${post.id}"))
+          case Some(_) => DBIO.failed(AlreadyExists(s"The post with the ID=${post.id} already exists"))
           case _ => postQuery returning postQuery.map(_.id) += post
         }
         maybePost <- find(maybePostId)
         post <- maybePost match {
           case Some(value) => DBIO.successful(value)
-          case _ => DBIO.failed(AmbiguousResult(s"Failed to save a post [post=$post]"))
+          case _ => DBIO.failed(AmbiguousResult(s"Failed to save the post [post=$post]"))
         }
       } yield post
 
@@ -115,7 +115,7 @@ class PostRepositoryImpl @Inject()(val database: AppDatabase)
       maybeId <- post.id.fold[DBIOAction[Long, _, Effect]](DBIO.failed(NotFound(s"Not found 'id' in the [post=$post]")))(DBIO.successful)
       count <- postQuery.filter(_.id === maybeId).update(post)
       result <- count match {
-        case 0 => DBIO.failed(NotFound(s"Not found a post with id=${post.id.get}"))
+        case 0 => DBIO.failed(NotFound(s"Cannot find a post with the ID=${post.id.get}"))
         case _ => DBIO.successful(post)
       }
     } yield result
@@ -124,11 +124,11 @@ class PostRepositoryImpl @Inject()(val database: AppDatabase)
       maybePost <- find(id)
       maybeDelete <- maybePost match {
         case Some(_) => postQuery.filter(_.id === id).delete
-        case _ => DBIO.failed(NotFound(s"Not found a post with [id = $id]"))
+        case _ => DBIO.failed(NotFound(s"Cannot find a post with [ID=$id]"))
       }
       result <- maybeDelete match {
         case 1 => DBIO.successful(maybePost)
-        case _ => DBIO.failed(AmbiguousResult(s"Failed to delete a post with [id = $id]"))
+        case _ => DBIO.failed(AmbiguousResult(s"Failed to delete the post with the [ID=$id]"))
       }
     } yield result
   }

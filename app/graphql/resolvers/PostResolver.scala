@@ -9,7 +9,7 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * A resolver class that contains all resolver methods for the Post model.
   *
-  * @param postRepository   an repository which provides basic operations for Post entity
+  * @param postRepository   a repository that provides basic operations for the Post entity
   * @param executionContext execute program logic asynchronously, typically but not necessarily on a thread pool
   */
 class PostResolver @Inject()(postRepository: PostRepository,
@@ -18,40 +18,40 @@ class PostResolver @Inject()(postRepository: PostRepository,
   /**
     * Returns a list of all posts.
     *
-    * @return list of posts
+    * @return the list of posts
     */
   def posts: Future[List[Post]] = postRepository.findAll()
 
   /**
-    * Add and save new Post instance.
+    * Adds and saves a new Post instance.
     *
-    * @param title   post title
-    * @param content post content
-    * @return created Post instance
+    * @param title   a post title
+    * @param content a post content
+    * @return the created Post instance
     */
   def addPost(title: String, content: String): Future[Post] = postRepository.create(Post(None, title, content))
 
   /**
-    * Finds Post by id.
+    * Finds a post by ID.
     *
-    * @param id an id of the Post
-    * @return found Post instance
+    * @param id a post ID
+    * @return the found Post instance
     */
   def findPost(id: Long): Future[Option[Post]] = postRepository.find(id)
 
   /**
-    * Updates existing post.
+    * Updates an existing post.
     *
-    * @param post post for update
-    * @return updated Post instance
+    * @param post a post to be updated
+    * @return the updated Post instance
     */
   def updatePost(post: Post): Future[Post] = postRepository.update(post)
 
   /**
-    * Deletes existing post.
+    * Deletes an existing post.
     *
-    * @param id a post id
-    * @return boolean result
+    * @param id a post ID
+    * @return a boolean value
     */
   def deletePost(id: Long): Future[Option[Post]] = postRepository.delete(id)
 }

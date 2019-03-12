@@ -1,9 +1,9 @@
 package models
 
 /**
-  * A class which used for publishing events related to Post.
+  * A case class used for publishing events related to the Post entity.
   *
-  * @param name a name of an event which will be published
-  * @param post an instance of Post which will be published
+  * @param name the name of the event to be published
+  * @param post an instance of Post to be published
   */
 case class PostEvent(name: String, post: Post) extends Event

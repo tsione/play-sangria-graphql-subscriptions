@@ -5,46 +5,46 @@ import models.Post
 import scala.concurrent.Future
 
 /**
-  * Simple CRUD repository which provides basic operations.
+  * A simple repository which provides basic CRUD operations.
   */
 trait PostRepository {
 
   /**
-    * Save an instance of Post to db.
+    * Saves an instance of Post to the database.
     *
-    * @param post a new instance
-    * @return saved instance
+    * @param post the new instance
+    * @return the saved instance
     */
   def create(post: Post): Future[Post]
 
   /**
-    * Returns instance by id.
+    * Returns a post instance found by ID.
     *
-    * @param id an id of the instance
-    * @return found instance
+    * @param id the instance ID
+    * @return the found instance
     */
   def find(id: Long): Future[Option[Post]]
 
   /**
-    * Returns a list of instances.
+    * Returns a list of post instances.
     *
-    * @return list of instance
+    * @return the list of posts
     */
   def findAll(): Future[List[Post]]
 
   /**
-    * Updates an existing instance.
+    * Updates an existing post instance.
     *
-    * @param post new instance
-    * @return updated instance
+    * @param post the new instance
+    * @return the updated instance
     */
   def update(post: Post): Future[Post]
 
   /**
-    * Delete an existing instance by id.
+    * Deletes an existing instance found by ID.
     *
-    * @param id an id of some instance
-    * @return an instance of Post which was deleted
+    * @param id the instance ID
+    * @return the deleted post instance
     */
   def delete(id: Long): Future[Option[Post]]
 }

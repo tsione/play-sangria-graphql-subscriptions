@@ -6,17 +6,17 @@ import play.api.mvc.{AbstractController, ControllerComponents}
 import scala.util.Try
 
 /**
-  * Handles and parse GraphQL query.
+  * Handles and parse GraphQL queries.
   *
-  * @param controllerComponents base controller components dependencies that most controllers rely on
+  * @param controllerComponents base controller component dependencies that most controllers rely on
   */
 class GraphQlHandler(controllerComponents: ControllerComponents) extends AbstractController(controllerComponents) {
 
   /**
-    * Parses JSON into components of GraphQL query
+    * Parses JSON into the GraphQL query components.
     *
-    * @param json an instance of JsValue which will be being parsed
-    * @return a tuple which contains GraphQL query components, namely query body, variables and operation
+    * @param json an instance of JsValue
+    * @return a tuple that contains GraphQL query components, namely 'query' body, 'variables' and 'operationName'
     */
   def parseToGraphQLQuery(json: JsValue): Try[(String, Option[String], Option[JsObject])] = {
     val extract: JsValue => (String, Option[String], Option[JsObject]) = query =>
@@ -35,16 +35,16 @@ class GraphQlHandler(controllerComponents: ControllerComponents) extends Abstrac
         case objectBody@JsObject(_) => extract(objectBody)
         case otherType =>
           throw new Error {
-            s"/graphql endpoint does not support request body of type [${otherType.getClass.getSimpleName}]"
+            s"The '/graphql' endpoint doesn't support request bodies of type [${otherType.getClass.getSimpleName}]"
           }
       }
     }
   }
 
   /**
-    * Parses variables of incoming query.
+    * Parses variables of the incoming GraphQL query.
     *
-    * @param variables variables from incoming query
+    * @param variables variables from the query
     * @return JsObject with variables
     */
   def parseVariables(variables: String): JsObject =

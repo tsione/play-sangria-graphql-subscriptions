@@ -13,9 +13,9 @@ import sangria.schema.Action
 /**
   * An implementation of PubSubService.
   *
-  * @param scheduler is an `scala.concurrent.ExecutionContext` that additionally can
+  * @param scheduler is scala.concurrent.ExecutionContext that additionally can
   *                  schedule the execution of units of work to run with a delay or periodically
-  * @tparam T an entity which is published
+  * @tparam T the published entity
   */
 class PubSubServiceImpl[T <: Event](implicit val scheduler: Scheduler) extends PubSubService[T] {
   private val log = Logger(classOf[PubSubServiceImpl[T]])

@@ -19,15 +19,15 @@ import scala.util.{Failure, Success, Try}
 object WebSocketFlowActor {
 
   /**
-    * Returns an instance of Props for WebSocketFlowActor actor.
+    * Returns an instance of Props for the WebSocketFlowActor actor.
     *
     * @param outActor             an actor on which will be sent messages from the current actor.
-    *                             Messages received by 'outActor' will be sent on a client over WebSocket connection
+    *                             Messages received by 'outActor' will be sent to the client over WebSockets
     * @param graphQL              an object containing a graphql schema of the entire application
-    * @param controllerComponents base controller components dependencies that most controllers rely on.
+    * @param controllerComponents base controller components dependencies that most controllers rely on
     * @param ec                   execute program logic asynchronously, typically but not necessarily on a thread pool
-    * @param mat                  an instance of an implementation of Materializer SPI (Service Provider Interface)
-    * @return an instance of Props for WebSocketFlowActor actor
+    * @param mat                  an instance of an implementation of Materializer Service Provider Interface
+    * @return an instance of Props for the WebSocketFlowActor actor
     */
   def props(outActor: ActorRef, graphQL: GraphQL, controllerComponents: ControllerComponents)
            (implicit ec: ExecutionContext, mat: Materializer): Props = {
@@ -36,15 +36,15 @@ object WebSocketFlowActor {
 }
 
 /**
-  * An actor which will receive any messages sent by a client over WebSocket connection.
+  * WebSocketFlowActor is the actor that receives messages sent by the client over WebSockets.
   *
-  * @param outActor             an actor on which will be sent messages from the current actor.
-  *                             Messages received by 'outActor' will be sent on a client over WebSocket connection
-  * @param graphQL              an object containing a graphql schema of the entire application
-  * @param graphQLSubscriptions an instance which contains graphql subscriptions which can be canceled on demand
+  * @param outActor             an actor on which messages are sent from the current actor.
+  *                             Messages received by 'outActor' will be sent to the client over WebSockets
+  * @param graphQL              an object containing a GraphQL schema of the entire application
+  * @param graphQLSubscriptions an instance that contains GraphQL subscriptions which can be canceled on demand
   * @param controllerComponents base controller components dependencies that most controllers rely on
   * @param ec                   execute program logic asynchronously, typically but not necessarily on a thread pool
-  * @param mat                  an instance of an implementation of Materializer SPI (Service Provider Interface)
+  * @param mat                  an instance of an implementation of Materializer Service Provider Interface
   */
 class WebSocketFlowActor(outActor: ActorRef,
                          graphQL: GraphQL,
@@ -54,18 +54,18 @@ class WebSocketFlowActor(outActor: ActorRef,
                          mat: Materializer)
   extends GraphQlHandler(controllerComponents) with Actor {
 
-  /** @inheritdoc*/
+  /** @inheritdoc */
   override def postStop(): Unit = {
     graphQLSubscriptions.cancelAll()
   }
 
-  /** @inheritdoc*/
+  /** @inheritdoc */
   override def receive: Receive = {
     case message: String =>
 
       val maybeQuery = Try(Json.parse(message)) match {
         case Success(json) => parseToGraphQLQuery(json)
-        case Failure(error) => throw new Error(s"Fail to parse a request body. Reason [$error]")
+        case Failure(error) => throw new Error(s"Failed to parse the request body. Reason [$error]")
       }
 
       val source: AkkaSource[JsValue] = maybeQuery match {
@@ -76,13 +76,13 @@ class WebSocketFlowActor(outActor: ActorRef,
   }
 
   /**
-    * Analyzes and executes an incoming GraphQL subscription, and returns a stream of elements.
+    * Analyzes and executes an incoming GraphQL subscription query and returns a stream of elements.
     *
-    * @param query     graphql body of request
-    * @param graphQL   an object containing a graphql schema of the entire application
-    * @param variables an incoming variables passed in the request
-    * @param operation name of the operation (handle only subscriptions)
-    * @param mat       an instance of an implementation of Materializer SPI (Service Provider Interface)
+    * @param query     a GraphQL query body
+    * @param graphQL   an object containing a GraphQL schema of the entire application
+    * @param variables the incoming variables passed in the query
+    * @param operation an operation name
+    * @param mat       an instance of an implementation of Materializer Service Provider Interface
     * @return an instance of AkkaSource which represents a stream of elements
     */
   def executeQuery(query: String,

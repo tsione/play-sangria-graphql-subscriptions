@@ -18,15 +18,15 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 /**
-  * Creates an `Action` to handle HTTP requests.
+  * Creates an Action to handle HTTP requests.
   *
-  * @param graphQL              an object containing a graphql schema of the entire application
-  * @param controllerComponents base controller components dependencies that most controllers rely on.
-  * @param ec                   execute program logic asynchronously, typically but not necessarily on a thread pool
-  * @param as                   an actor system is a hierarchical group of actors which share common
-  *                             configuration, e.g. dispatchers, deployments, remote capabilities and
-  *                             addresses. It is also the entry point for creating or looking up actors
-  * @param mat                  an instance of an implementation of Materializer SPI (Service Provider Interface)
+  * @param graphQL              an object containing a GraphQL schema of the entire application
+  * @param controllerComponents base controller component dependencies that most controllers rely on
+  * @param ec                   executes program logic asynchronously typically but not necessarily on a thread pool
+  * @param as                   an actor system, a hierarchical group of actors which share common configuration
+  *                             such as dispatchers, deployments, remote capabilities, and addresses.
+  *                             The actor system is also the entry point for creating or looking up actors
+  * @param mat                  an instance of the Materializer Service Provider Interface
   */
 @Singleton
 class AppController @Inject()(graphQL: GraphQL,
@@ -36,14 +36,14 @@ class AppController @Inject()(graphQL: GraphQL,
                               mat: Materializer) extends GraphQlHandler(controllerComponents) {
 
   /**
-    * Renders an page with an in-browser IDE for exploring GraphQL.
+    * Renders a page with an in-browser IDE for exploring GraphQL.
     */
   def graphiql: Action[AnyContent] = Action(Ok(views.html.graphiql()))
 
   /**
-    * Parses graphql body of incoming request.
+    * Parses the GraphQL body of the incoming request.
     *
-    * @return an 'Action' to handles a request and generates a result to be sent to the client
+    * @return an Action to handle the request and generate a result to be sent to the client
     */
   def graphqlBody: Action[JsValue] = Action.async(parse.json) {
     request: Request[JsValue] =>
@@ -55,10 +55,10 @@ class AppController @Inject()(graphQL: GraphQL,
   }
 
   /**
-    * Accepts and processes GraphQL subscription over WebSocket connection
+    * Accepts and processes GraphQL subscription queries received over a WebSocket connection.
     *
-    * @return an instance of WebSocket to handles a messages with GraphQL subscription
-    *         and generates a result to be sent to the client
+    * @return an instance of WebSocket to handle messages with GraphQL subscription queries
+    *         and to generate a result to be sent to the client
     */
   def graphqlSubscriptionOverWebSocket: WebSocket = WebSocket.accept[String, String] {
     _: RequestHeader =>
@@ -69,9 +69,9 @@ class AppController @Inject()(graphQL: GraphQL,
   }
 
   /**
-    * Accepts and processes GraphQL subscription over SSE connection
+    * Accepts and processes GraphQL subscriptions over the SSE connection.
     *
-    * @return an 'Action' to handles a request with GraphQL subscription and generates
+    * @return an Action to handle GraphQL subscription queries and to generate
     *         a result to be sent to the client
     */
   def graphqlSubscriptionOverSSE: Action[AnyContent] = Action.async {
@@ -83,17 +83,17 @@ class AppController @Inject()(graphQL: GraphQL,
 
       queryString match {
         case Some(query) => executeQuery(query, variables, operationType)
-        case _ => Future.successful(BadRequest("Request does not contain graphql query"))
+        case _ => Future.successful(BadRequest("Request doesn't contain a GraphQL query"))
       }
   }
 
   /**
-    * Analyzes and executes incoming graphql query, and returns execution result.
+    * Analyzes and executes incoming GraphQL queries and returns the execution result.
     *
-    * @param query     graphql body of request
-    * @param variables incoming variables passed in the request
-    * @param operation name of the operation (queries, mutations or subscriptions)
-    * @return simple result, which defines the response header and a body ready to send to the client
+    * @param query     the GraphQL query body
+    * @param variables the incoming variables passed in the query
+    * @param operation the operation name, can be either 'query', 'mutation', or 'subscriptions'
+    * @return a result with a response header and a body ready to be send to the client
     */
   def executeQuery(query: String,
                    variables: Option[JsObject] = None,
@@ -127,7 +127,7 @@ class AppController @Inject()(graphQL: GraphQL,
                 case error: QueryAnalysisError => BadRequest(error.resolveError)
                 case error: ErrorWithResolver => InternalServerError(error.resolveError)
               }
-          case _ => Future(BadRequest("Unsupported graphql operation type"))
+          case _ => Future(BadRequest("Not supported GraphQL operation type"))
         }
       }
 

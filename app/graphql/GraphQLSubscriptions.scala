@@ -6,9 +6,8 @@ import play.api.Logger
 import scala.collection.mutable.ArrayBuffer
 
 /**
-  * A class which contains a list of subscriptions which was opened
-  * during one WebSocket connection by a user and which can be canceled on demand.
-  *
+  * A class that contains a list of subscriptions and that was opened
+  * during a WebSocket connection by a user and which can be canceled on demand.
   */
 case class GraphQLSubscriptions(){
 
@@ -17,7 +16,7 @@ case class GraphQLSubscriptions(){
   private var closed = false
 
   /**
-    * Adds a new cancelable to subscriptions.
+    * Adds a new Cancelable to subscriptions.
     */
   def add(cancelable: Cancelable): Unit = this.synchronized {
     if (!closed) {
@@ -28,7 +27,7 @@ case class GraphQLSubscriptions(){
   }
 
   /**
-    * Cancels all subscriptions opened during one WebSocket connection
+    * Cancels all subscriptions opened during a single WebSocket connection
     * and clears the subscriptions queue.
     */
   def cancelAll(): Unit = this.synchronized {
@@ -38,7 +37,7 @@ case class GraphQLSubscriptions(){
   }
 
   /**
-    * Returns a number of opened subscriptions during one WebSocket connection.
+    * Returns the number of opened subscriptions during a single WebSocket connection.
     *
     * @return a number of opened subscriptions
     */
