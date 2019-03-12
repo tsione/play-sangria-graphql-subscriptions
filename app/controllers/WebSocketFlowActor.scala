@@ -97,7 +97,7 @@ class WebSocketFlowActor(outActor: ActorRef,
           import sangria.execution.ExecutionScheme.Stream
           import sangria.streaming.akkaStreams._
 
-          Executor.execute(
+          val source: AkkaSource[JsValue] = Executor.execute(
             schema = graphQL.Schema,
             queryAst = queryAst,
             variables = variables.getOrElse(Json.obj()),
@@ -106,6 +106,7 @@ class WebSocketFlowActor(outActor: ActorRef,
             case error: QueryAnalysisError => Json.obj("BadRequest" -> error.resolveError)
             case error: ErrorWithResolver => Json.obj("InternalServerError" -> error.resolveError)
           }
+          source
 
         case _ => Source.single {
           Json.obj("UnsupportedType" -> JsString(s"$operation"))
