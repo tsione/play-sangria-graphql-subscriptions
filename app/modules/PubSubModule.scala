@@ -6,7 +6,8 @@ import monix.execution.Scheduler
 import services.{PubSubService, PubSubServiceImpl}
 
 /**
-  * Contains binds of services to their implementations in order to use it in DI.
+  * Binds the PubSubService to its PubSubServiceImpl implementations
+  * to use it in the Dependency Injection mechanism.
   */
 class PubSubModule extends AbstractModule {
 
@@ -16,11 +17,11 @@ class PubSubModule extends AbstractModule {
   }
 
   /**
-    * Bind of 'PubSubService' to an implementation
+    * Binds PubSubService to its implementation
     *
-    * @param scheduler is an `scala.concurrent.ExecutionContext` that additionally can
+    * @param scheduler is scala.concurrent.ExecutionContext that additionally can
     *                  schedule the execution of units of work to run with a delay or periodically
-    * @return an instance of PubSubService implementation
+    * @return an instance of the PubSubService implementation
     */
   @Provides
   @Singleton

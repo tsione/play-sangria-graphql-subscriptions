@@ -4,7 +4,8 @@ import com.google.inject.{AbstractModule, Scopes}
 import repositories.{PostRepository, PostRepositoryImpl}
 
 /**
-  * Contains bind of post repository to its implementation in order to use it in DI.
+  * Binds the Post repository to its implementation
+  * to use it in the Dependency Injection mechanism.
   */
 class PostModule extends AbstractModule {
 

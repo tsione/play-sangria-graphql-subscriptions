@@ -6,7 +6,8 @@ import slick.basic.DatabaseConfig
 import slick.jdbc.{H2Profile, JdbcBackend}
 
 /**
-  * A trait that declares an interface for a database access object that should be injected by the DI.
+  * A trait that declares an interface for the database access object
+  * to be injected by the Dependency Injection mechanism.
   */
 private[modules] trait Database {
   def config: DatabaseConfig[H2Profile]

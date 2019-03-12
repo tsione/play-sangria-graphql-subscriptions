@@ -5,15 +5,15 @@ import graphql.schemas.PostSchema
 import sangria.schema.{ObjectType, fields}
 
 /**
-  * Base component for the GraphQL schema.
+  * A basic component for a GraphQL schema.
   *
-  * @param postSchema an object containing all queries, mutations and subscriptions to work with the Post entity
+  * @param postSchema an object containing all queries, mutations, and subscriptions to work with the Post entity
   */
 class GraphQL @Inject()(postSchema: PostSchema) {
 
   /**
-    * Contains a graphql schema of the entire application.
-    * We can add queries, mutations, etc. for each model.
+    * Contains a GraphQL schema for the entire application.
+    * You can add more queries, mutations, and subscriptions for each model.
     */
   val Schema = sangria.schema.Schema(
     query = ObjectType(

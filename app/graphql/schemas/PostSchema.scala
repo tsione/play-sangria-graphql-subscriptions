@@ -13,29 +13,28 @@ import services.PubSubService
 import scala.concurrent.ExecutionContext
 
 /**
-  * Contains the definitions of all query, mutations and subscriptions
-  * that work with the entity 'Post'. Also it is a construction element
-  * for the build graphql schema of the entire application.
+  * Contains the definitions of all queries, mutations, and subscriptions
+  * for the Post entity. This is an building block for the global GraphQL schema.
   *
-  * @param postResolver  an object containing all resolve functions to work with the entity of 'Post'
+  * @param postResolver  an object containing all resolve functions to work with the Post entity
   * @param pubSubService an instance of an implementation of PubSubService which is used to publish events
-  *                      or subscribe to some mutations
+  *                      or subscribe to mutations
   * @param ec            execute program logic asynchronously, typically but not necessarily on a thread pool
-  * @param mat           an instance of an implementation of Materializer SPI (Service Provider Interface)
+  * @param mat           an instance of an implementation of Materializer Service Provider Interface
   */
 class PostSchema @Inject()(postResolver: PostResolver,
                            pubSubService: PubSubService[PostEvent])
                           (implicit ec: ExecutionContext, mat: Materializer) {
 
   /**
-    * Convert a Post object to a Sangria graphql object.
+    * Convert a Post object to a Sangria GraphQL object.
     * Sangria macros deriveObjectType creates an ObjectType with fields found in the Post entity.
     */
   implicit val PostType: ObjectType[Unit, Post] = deriveObjectType[Unit, Post](ObjectTypeName("Post"))
   implicit val PostEventType: ObjectType[Unit, PostEvent] = deriveObjectType[Unit, PostEvent](ObjectTypeName("PostEvent"))
 
   /**
-    * Enumeration with names for GraphQL fields of queries, mutations, and subscriptions
+    * Enumeration with names for GraphQL fields of queries, mutations, and subscriptions.
     */
   object FieldNames extends Enumeration {
 
@@ -52,7 +51,7 @@ class PostSchema @Inject()(postResolver: PostResolver,
   import FieldNames._
 
   /**
-    * List of queries to work with the entity of Post
+    * A list of queries to work with the Post entity.
     */
   val Queries: List[Field[UserContext, Unit]] = List(
     Field(
@@ -71,7 +70,7 @@ class PostSchema @Inject()(postResolver: PostResolver,
   )
 
   /**
-    * List of mutations to work with the entity of Post.
+    * A list of mutations to work with the Post entity.
     */
   val Mutations: List[Field[UserContext, Unit]] = List(
     Field(
@@ -132,7 +131,7 @@ class PostSchema @Inject()(postResolver: PostResolver,
   )
 
   /**
-    * List of subscriptions to work with the entity of Post.
+    * A list of subscriptions to work with the Post entity.
     */
   val Subscriptions: List[Field[UserContext, Unit]] = List(
     Field.subs(

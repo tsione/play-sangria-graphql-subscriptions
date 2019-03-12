@@ -4,16 +4,16 @@ import slick.jdbc.H2Profile.api.{Table => SlickTable, _}
 import slick.lifted.{Tag => SlickTag}
 
 /**
-  * The main entity over which we will carry out the CRUD operations.
+  * The main entity over which the CRUD operations are carried out.
   *
-  * @param id      id of the entity
-  * @param title   post's title
-  * @param content post's content
+  * @param id      an entity ID
+  * @param title   a post title
+  * @param content a post content
   */
 case class Post(id: Option[Long] = None, title: String, content: String)
 
 /**
-  * Defined slick table for entity 'Post'
+  * Defines a Slick table for the Post entity.
   */
 object Post extends ((Option[Long], String, String) => Post) {
 
