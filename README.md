@@ -1,14 +1,16 @@
 [![Build Status](https://travis-ci.org/PLGrudina/GraphQL_API_example.svg?branch=master)](https://travis-ci.org/PLGrudina/GraphQL_API_example) 
 
-This is a demo project showing how to build a GraphQL API on the basis of a Play2 framework using Scala and Sangria.
+This is a demo Scala and Play project that demonstrates how to build a GraphQL API with GraphQL subscriptions using Sangria, Akka Streams, and Monix.
 
-**How to start**
+## Run the app
 
-Run an application:
+Download and run the application using this command:
 
-`sbt run`
+```
+sbt run
+```
 
-After launch, the application will be available at `localhost:9000`
+The application will be available at `localhost:9000`. You will need to apply the database script to run the application.
 
 **Sources**
 
